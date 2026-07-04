@@ -1,11 +1,13 @@
 import time 
+from sim import NormalSimulator
 from OBD import OBDAdapter
 from analyzer import Analyzer
 
+sim = NormalSimulator
 analyzer = Analyzer()
 obd = OBDAdapter
 while True:
-    reading = obd.get_reading()
+    reading = sim.get_reading()
     print(reading)  
     alerts = analyzer.check(reading)
     
