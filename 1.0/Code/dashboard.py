@@ -1,5 +1,3 @@
-
-
 import matplotlib.pyplot as plt
 
 plt.ion()
@@ -19,7 +17,7 @@ ax_rpm.set_xlabel("Time")
 ax_speed.legend()
 ax_rpm.legend()
 
-def update_dashboard(time_history, speed_history, rpm_history):
+def update_graphs(time_history, speed_history, rpm_history):
     speed_line.set_data(time_history, speed_history)
     rpm_line.set_data(time_history, rpm_history)
 
@@ -31,3 +29,4 @@ def update_dashboard(time_history, speed_history, rpm_history):
 
     plt.draw()
     plt.pause(0.01)
+    

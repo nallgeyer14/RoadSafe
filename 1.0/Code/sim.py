@@ -68,9 +68,10 @@ class NormalSimulator:
         }
         self.shift_timer = 0
         self.rpm = 750
+        self.last_time = time.time()
        
        
-        self.spike_chance = 0.01 # 1% chance to inject a spike
+        self.spike_chance = 0.00001 # 1% chance to inject a spike
 
     def _inject_spike(self, reading):
         return random.random() < self.spike_chance # 5% chance to inject a spike
@@ -113,8 +114,8 @@ class NormalSimulator:
             if  self.speed < 2:
                 self.state = "Idle"
 
-    def _shift_gear(self):
-        self.shift_timer += 1
+    def _shift_gear(self, dt):
+        self.shift_timer += dt
         
         if self.shift_timer < 2:
             return # Only shift gears every 2 readings to avoid rapid gear changes
@@ -133,6 +134,9 @@ class NormalSimulator:
        
           # Update the state based on current conditions
         # Target speed for cruising
+        now = time.time()
+        dt = now - self.last_time
+        self.last_time = now
 
         spike = self._inject_spike(None)  # Determine if a spike should be injected
         
@@ -163,8 +167,8 @@ class NormalSimulator:
          
        
         #apply physics
-        self.speed += self.acceleration  # Update speed based on acceleration
-        self.speed *= 0.998 # Gradually decrease speed due to drag
+        self.speed += self.acceleration * dt  # Update speed based on acceleration
+        self.speed *= (0.998 ** dt) # Gradually decrease speed due to drag
         self.speed = max(0, round(self.speed, 1))  # Ensure speed doesn't go below 0 and round to 1 decimal place
        
 
@@ -182,12 +186,12 @@ class NormalSimulator:
         self.rpm = max(650, int(self.rpm))  # Ensure RPM doesn't go below idle
         self.rpm = int(self.rpm)  # Ensure RPM is an integer
 
-        self._shift_gear()  # Shift gears based on RPM
+        self._shift_gear(dt)  # Shift gears based on RPM
 
         if self.rpm > 3200:
-            self.coolant_temp += 0.15
+            self.coolant_temp += 0.15 * dt
         else:
-            self.coolant_temp -= 0.3
+            self.coolant_temp -= 0.3 * dt
         
         self.coolant_temp = max(160, min(250, self.coolant_temp))  # Keep coolant temp within realistic bounds
        
