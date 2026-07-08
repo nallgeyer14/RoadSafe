@@ -1,179 +1,164 @@
 # RoadSafe
 
-RoadSafe is a Python-based vehicle monitoring and diagnostic simulator designed to emulate real-time OBD-II vehicle telemetry. The project began as a simple sensor simulator but has evolved into a stateful vehicle model capable of generating realistic driving behavior, detecting abnormal conditions, and preparing for integration with real OBD-II hardware.
+## Vehicle Telemetry Analysis and Driver Behavior Monitoring System
 
-The long-term goal is to create a diagnostic engine capable of monitoring live vehicle data, identifying potential mechanical issues, and providing meaningful alerts rather than simply displaying raw sensor values.
+RoadSafe is a vehicle data analysis platform designed to simulate, collect, visualize, and analyze real-world vehicle telemetry data. The project focuses on building a foundation for intelligent vehicle monitoring by processing OBD-II style sensor data and identifying patterns, anomalies, and changes in vehicle behavior.
+
+The current version uses a simulated vehicle environment to replicate real driving signals such as speed, acceleration, throttle input, and sensor behavior. The architecture is designed with future expansion toward collecting and analyzing live vehicle data through OBD-II hardware.
 
 ---
 
-## Features
+## Project Goals
 
-### Vehicle Simulation
+Modern vehicles generate large amounts of operational data, but much of that information is limited to basic diagnostics. RoadSafe explores how vehicle telemetry can be transformed into meaningful insights through data analysis and behavioral modeling.
 
-* Stateful driving simulation
-* Idle, Accelerating, Cruise, and Decelerating driving states
-* Automatic gear shifting
-* Realistic acceleration and drag
-* Dynamic RPM based on speed and gear ratio
-* Simulated engine coolant temperature
+The primary goals of this project are:
+
+* Detect abnormal vehicle behavior
+* Establish a baseline for normal vehicle operation
+* Monitor changes in driving patterns over time
+* Identify unusual sensor readings and potential issues
+* Create a foundation for predictive vehicle analytics
+
+---
+
+## Current Features
+
+### Vehicle Simulation Engine
+
+RoadSafe includes a simulated vehicle environment capable of generating realistic OBD-II style telemetry data.
+
+Current capabilities:
+
+* Simulates different driving states:
+
+  * Idle
+  * Acceleration
+  * Cruising
+  * Deceleration
+* Generates dynamic sensor readings based on vehicle behavior
+* Models changes in vehicle conditions over time
+
+---
+
+### Data Collection and Processing
+
+The system collects and organizes vehicle telemetry into structured data formats for analysis.
+
+Current functionality:
+
 * Continuous telemetry generation
-
-### Telemetry
-
-Each generated reading includes:
-
-* Timestamp
-* Vehicle speed (MPH)
-* Engine RPM
-* Throttle position (%)
-* Coolant temperature (°F)
-* Current driving state
-* Current gear
-
-### Vehicle Analyzer
-
-The analyzer processes telemetry and generates alerts for abnormal behavior.
-
-Current detections include:
-
-* Rapid acceleration
-* Sudden speed spikes
-* Vehicle moving while in Idle state
-* High coolant temperature
-* Custom rule-based alerts
-
-The analyzer is designed so new diagnostic rules can be added with minimal changes.
+* Structured sensor data handling
+* Data preparation for analysis and visualization
+* Modular architecture for future hardware integration
 
 ---
 
-## Project Structure
+### Anomaly Detection
 
-```
-RoadSafe/
-│
-├── main.py              # Program entry point
-├── sim.py               # Vehicle simulation engine
-├── analyzer.py          # Alert detection logic
-├── models.py            # VehicleReading dataclass
-└── README.md
-```
+RoadSafe includes simulated sensor irregularities to test detection capabilities.
+
+Current functionality:
+
+* Injects abnormal sensor readings
+* Compares readings against expected vehicle behavior
+* Provides a foundation for identifying unusual operating conditions
 
 ---
 
-## How It Works
+### Data Visualization
 
-1. The simulator generates realistic vehicle telemetry.
-2. Telemetry is stored as a `VehicleReading`.
-3. The analyzer evaluates each reading.
-4. Alerts are generated if abnormal conditions are detected.
-5. Results are displayed in real time.
+Vehicle telemetry can be visualized to analyze trends and identify patterns.
 
-Example output:
+Current analysis includes:
+
+* Speed behavior
+* Acceleration patterns
+* Throttle changes
+* Sensor fluctuations
+
+---
+
+## System Architecture
 
 ```
-Timestamp: 2026-07-02 22:57:31
-
-Speed: 57.7 MPH
-RPM: 2755
-Throttle: 12%
-Coolant Temp: 160°F
-State: Cruise
-Gear: 4
-
-No alerts detected.
+             Simulated Vehicle
+                    |
+                    v
+          Telemetry Data Generator
+                    |
+                    v
+            Data Processing Layer
+                    |
+                    v
+        Analysis and Visualization Tools
+                    |
+                    v
+          Vehicle Behavior Insights
 ```
 
 ---
 
-## Current Vehicle Model
+## Example Data Collected
 
-The simulator currently models:
-
-* Idle engine behavior
-* Smooth acceleration
-* Cruise control behavior
-* Vehicle deceleration
-* Gear shifting
-* RPM changes
-* Coolant temperature changes
-* Vehicle drag
-
-Rather than generating completely random values, each reading depends on the previous reading, producing realistic transitions between driving conditions.
-
----
-
-## Future Plans
-
-RoadSafe is intended to become a real-time diagnostic assistant rather than simply an OBD-II dashboard.
-
-Planned features include:
-
-* Live OBD-II integration using an ELM327 adapter
-* Support for python-OBD
-* Historical trend analysis
-* Trip statistics
-* Fault confidence scoring
-* Intelligent diagnostic recommendations
-* Sensor anomaly detection
-* Transmission slip detection
-* Engine overheating prediction
-* Aggressive driving analysis
-* Data logging to CSV or SQLite
-* Live dashboard interface
-* Graphing of sensor data
-* Configurable alert thresholds
+| Sensor        | Description                    |
+| ------------- | ------------------------------ |
+| Speed         | Current vehicle speed          |
+| Throttle      | Driver input percentage        |
+| Acceleration  | Rate of speed change           |
+| Engine Data   | Simulated engine behavior      |
+| Sensor Health | Detection of abnormal readings |
 
 ---
 
 ## Technologies Used
 
-* Python 3
-* Dataclasses
+* Python
 * Object-Oriented Programming
-* Random-based state simulation
-* Rule-based anomaly detection
+* Data Processing
+* Data Visualization
+* Simulated OBD-II Telemetry
+* Git and GitHub
 
 ---
 
-## Why This Project?
+## Future Development
 
-Most consumer OBD-II applications simply display vehicle information.
+Future versions of RoadSafe will expand from simulated data toward real-world vehicle integration.
 
-RoadSafe aims to go one step further by interpreting vehicle telemetry and identifying meaningful patterns that may indicate unsafe driving conditions or developing mechanical issues.
+Planned improvements:
 
-The project is also designed so the same analysis engine can work with either:
-
-* Simulated vehicle data (development and testing)
-* Real OBD-II telemetry (future implementation)
-
-This allows diagnostic rules to be developed and tested without requiring constant access to a physical vehicle.
-
----
-
-## Future Hardware Integration
-
-The planned hardware setup is:
-
-```
-Vehicle
-    │
-OBD-II Port
-    │
-ELM327 Adapter
-    │
-python-OBD
-    │
-VehicleReading
-    │
-RoadSafe Analyzer
-    │
-Warnings & Alerts
-```
-
-No major changes to the analyzer should be required when transitioning from simulated data to live vehicle telemetry.
+* Connect to physical OBD-II adapters
+* Collect live vehicle telemetry
+* Develop vehicle-specific operating baselines
+* Analyze driver behavior patterns
+* Apply machine learning for predictive analysis
+* Create a real-time vehicle monitoring dashboard
 
 ---
 
-## License
+## Project Vision
 
-This project is intended for educational and personal development purposes.
+Traditional vehicle diagnostics often rely on predefined thresholds to determine whether a reading is abnormal. RoadSafe explores a more adaptive approach by learning how an individual vehicle normally operates.
+
+Instead of asking:
+
+> "Is this value outside a fixed range?"
+
+RoadSafe aims to answer:
+
+> "Is this vehicle behaving differently than it normally does?"
+
+By establishing a personalized vehicle baseline, RoadSafe can provide more intelligent insights into vehicle health and behavior.
+
+---
+
+## Author
+
+Nick Allgeyer
+
+Computer Science Student
+Cybersecurity Focus
+
+GitHub:
+https://github.com/nallgeyer14
